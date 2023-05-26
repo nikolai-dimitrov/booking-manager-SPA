@@ -1,0 +1,354 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script src="https://kit.fontawesome.com/842012a7cc.js"></script>
+    <title>Main Page</title>
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+</head>
+<body>
+<header>
+    <nav id="nav">
+        <h3>Travel</h3>
+        <ul class="nav__container" role="list">
+            <li class="nav__item">
+                <a href="/home" id="homeBtn">Home</a>
+            </li>
+            <li>
+                <a href="/home" id="aboutBtn">About us</a>
+            </li>
+            <li>
+                <a href="/home" id="reservationBtn">Reservation</a>
+            </li>
+            <li>
+                <a href="/login" id="loginBtn">Login</a>
+            </li>
+            <li>
+                <a href="/register" id="registerBtn">Register</a>
+            </li>
+            <li>
+                <a href="/logout" id="logoutBtn">Logout</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main>
+</main>
+<div id="views">
+    <section id="homeView">
+        <div class="image-wrapper">
+            <img src="https://static.euronews.com/articles/stories/06/23/28/40/1440x810_cmsv2_e41d2d1a-ba3b-50f5-94b2-3f322b05c16a-6232840.jpg"
+                 alt="no-img">
+        </div>
+        <div>
+            {#            <img src="https://thumbs.dreamstime.com/b/hotel-10732347.jpg" alt="no-img">#}
+        </div>
+        <form action="" class="hotels__form">
+            <label for="destination">Destination/City:
+                <div>
+                    <input type="text" name="destination">
+                    <i class="fa-solid fa-location-arrow"></i>
+                </div>
+            </label>
+            <label for="checkInDate">Check in:
+                <div>
+                    <input type="date" name="checkInDate">
+                </div>
+            </label>
+            <label for="checkOutDate">Check out:
+                <div>
+                    <input type="date" name="checkOutDate">
+                </div>
+            </label>
+            <label for="roomType">Room Type:
+                <div>
+                    <select name="roomType">
+                        <option value="Single Room">Single Room</option>
+                        <option value="Double Room">Double Room</option>
+                        <option value="Family Room">Family Room</option>
+                    </select>
+                    <i class="fa-solid fa-house"></i>
+                </div>
+            </label>
+            <div>
+                <label for="">Search</label>
+                <button>Search
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </form>
+        <h2 class="home__heading">Let's go on an adventure</h2>
+        <p class="home__desc">Find and book a great experience.</p>
+        <article class="home__card">
+            <div class="hotel-info-wrapper">
+                <div class="card__img-wrapper">
+                    <img src="https://m.economictimes.com/thumb/msid-69148597,width-1200,height-900,resizemode-4,imgsize-235513/hotel-agencies.jpg"
+                         alt="no-img">
+                </div>
+                <div class="card__body">
+                    <div class="card__heading-wrapper">
+                        <div class="heading__left-side">
+                            <div class="heading__left-upper">
+                                <h3 class="card__heading">EXAMPLE CARD</h3>
+                                <span class="card__stars">
+                                <i class="fa-solid fa-star"></i>
+                            </span>
+                            </div>
+                            <div class="heading__left-lower">
+                                <p class="card__city">Varna,</p>
+                                <p class="card__country">Bulgaria</p>
+                                <p class="card__distance-info">1.8km from centre</p>
+                            </div>
+                        </div>
+                        <div class="heading__right-side">
+                            <p class="card__rating-text">Super</p>
+                            <p class="card__rating-num">9.3</p>
+                        </div>
+                    </div>
+                    <div class="card__desc-wrapper">
+                        <div class="card__desc-left">
+                            <p class="room">Standard Single Room</p>
+                            <p class="eating">Breakfast included</p>
+                            <p class="cancellation">Free Cancellation</p>
+                            <p class="prepayment">No prepayment needed</p>
+                        </div>
+                        <div class="card__desc-right">
+                            <p class="card__night">1 night</p>
+                            <p class="card__room-type">Single Room</p>
+                            <p class="card__price">BGN 100</p>
+                            <p class="card__price-desc">Includes taxes</p>
+                            <a href="#" class="card__btn">More information</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="room__info-wrapper">
+                <h3>Our room features:</h3>
+                <ul class="room__items" role="list">
+                    <li class="item">
+                        <p><i class="fa-solid fa-door-open"></i>40m2</p>
+                    </li>
+                    <li class="item">
+                        <p><i class="fa-solid fa-mountain-sun"></i>Mountain</p>
+                    </li>
+                    <li class="item">
+                        <p><i class="fa-solid fa-umbrella-beach"></i>Balcony</p>
+                    </li>
+                    <li class="item">
+                        <p><i class="fa-solid fa-shower"></i>Private bath</p>
+                    </li>
+                    <li class="item">
+                        <p><i class="fa-solid fa-snowflake"></i>Air conditioning</p>
+                    </li>
+                    <li class="item">
+                        <p><i class="fa-solid fa-tv"></i>TV</p>
+                    </li>
+                </ul>
+                <div class="divider"></div>
+                <ul class="room__facilities" role="list">
+                    <li class="item">
+                        <p><i class="fa-solid fa-check green-cl"></i>Mini Bar</p>
+                    </li>
+                    <li class="item">
+                        <p><i class="fa-solid fa-check green-cl"></i>Hair Dryer</p>
+                    </li>
+                    <li class="item">
+                        <p><i class="fa-solid fa-check green-cl"></i>Heating</p>
+                    </li>
+                    <li class="item">
+                        <p><i class="fa-solid fa-check green-cl"></i>Mosquito net</p>
+                    </li>
+                </ul>
+                <div class="divider"></div>
+                <div class="continue__reserve-wrapper no-date-flex-end">
+                    {# IF DATE IS ENTERED AND ROOM AVAILABLE #}
+                    <div class="info-wrapper no-date-flex">
+                        <p>Please enter check in\check out date for your stay.</p>
+                        <label for="checkInR">
+                            Check in:
+                            <input type="date" name="checkInR">
+                        </label>
+                        <label for="checkOutR">
+                            Check out:
+                            <input type="date" name="checkOutR">
+                        </label>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="#/" class="reservation__btn gray">Reserve</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+    <section id="loginView">
+        <div class="front-shadow"></div>
+        <div class="login__img-wrapper">
+            {#            <img src="https://www.fodors.com/assets/destinations/711600/cityscape-amasra-black-sea-coast-turkey_980x650.jpg" alt="">#}
+            <img src="https://images.unsplash.com/photo-1500835556837-99ac94a94552?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8dHJhdmVsfGVufDB8fDB8fA%3D%3D&w=1000&q=80"
+                 alt="no-img">
+        </div>
+        <form action="" class="login__form" autocomplete="off">
+            <div class="input-container">
+                <i class="fa-solid fa-user"></i>
+                <div class="input-layer"></div>
+                <input type="text" name="username" placeholder="Username" autocomplete="off">
+            </div>
+            <div class="input-container">
+                <i class="fa-solid fa-lock"></i>
+                <div class="input-layer"></div>
+                <input type="password" name="password" placeholder="Password" autocomplete="new-password">
+            </div>
+            <button>GET STARTED</button>
+            <div class="form_bottom-container">
+                <div class="remember__me-container">
+                    <input type="checkbox" name="Remember me" id="rememberMe" value="lsRememberMe">
+                    <label for="Remember me">Remember me</label>
+                </div>
+                <a href="register/">CREATE ACCOUNT</a>
+            </div>
+        </form>
+    </section>
+
+    <section id="registerView">
+        {#            <img src="https://www.fodors.com/assets/destinations/711600/cityscape-amasra-black-sea-coast-turkey_980x650.jpg" alt="">#}
+        <div class="front-shadow"></div>
+        <div class="login__img-wrapper">
+            <img src="https://images.unsplash.com/photo-1500835556837-99ac94a94552?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8dHJhdmVsfGVufDB8fDB8fA%3D%3D&w=1000&q=80"
+                 alt="no-img">
+        </div>
+        <form action="" class="login__form">
+            <div class="input-container">
+                <i class="fa-solid fa-envelope"></i>
+                <div class="input-layer"></div>
+                <input type="email" name="email" placeholder="Email">
+            </div>
+            <div class="input-container">
+                <i class="fa-solid fa-user"></i>
+                <div class="input-layer"></div>
+                <input type="text" name="username" placeholder="Username">
+            </div>
+            <div class="input-container">
+                <i class="fa-solid fa-lock"></i>
+                <div class="input-layer"></div>
+                <input type="password" name="password" placeholder="Password">
+            </div>
+            <div class="input-container">
+                <i class="fa-solid fa-lock"></i>
+                <div class="input-layer"></div>
+                <input type="password" name="repass" placeholder="Confirm Password">
+            </div>
+            <button>Create Account</button>
+        </form>
+    </section>
+
+    <section id="aboutUsView">
+        <div class="about__image-wrapper">
+            <h2 class="about__heading">If you want to see the beauty of the</h2>
+            <img src="https://i.ytimg.com/vi/B18tkJP2MuA/maxresdefault.jpg" alt="no img">
+        </div>
+        <div class="about__places-wrapper">
+            <article class="about__places">
+                <h3 class="places__heading">Places you must visit in your lifetime</h3>
+                <ul class="places-wrapper" role="list">
+                    <li class="item">
+                        <img src="https://i.pinimg.com/originals/3f/c3/9c/3fc39ce9f87dbe623c6ad7f83bc8e9e6.jpg"
+                             alt="shipka">
+                        <p>Shipka</p>
+                    </li>
+                    <li class="item">
+                        <img src="https://www.andrey-andreev.com/wp-content/uploads/2018/02/IMGP2178.jpg"
+                             alt="melnik">
+                        <p>Melnik</p>
+                    </li>
+                    <li class="item">
+                        <img src="https://rilskimanastir.org/site/assets/files/1/rm-1-1.jpg" alt="rila monastery">
+                        <p>Rila Monastery</p>
+                    </li>
+                    <li class="item">
+                        <img src="https://static.standartnews.com/storage/thumbnails/inner_article/7116/5972/3517/%D0%B1%D0%B5%D0%BB%D0%BE%D0%B3%D1%80%D0%B0%D0%B4%D1%87%D0%B8%D1%88%D0%BA%D0%B8%20%D1%81%D0%BA%D0%B0%D0%BB%D0%B8.png"
+                             alt="belogradchik">
+                        <p>Belogradchik</p>
+                    </li>
+                    <li class="item">
+                        <img src="https://2.bp.blogspot.com/-L6xleCdh3Vo/V0A7avSz4wI/AAAAAAAACbg/otVtJ2pJdCk0YnkbEQwGZTkw_UdM-ZeyQCLcB/s1600/1933929_1194338500581684_8057419803134673324_n.jpg"
+                             alt="cave">
+                        <p>Cave</p>
+                    </li>
+                    <li class="item">
+                        <img src="https://www.daskalo.com/caves/files/2016/06/gyrlo-300x224.jpg"
+                             alt="devil-cave">
+                        <p>Devil's Throat</p>
+                    </li>
+                    <li class="item">
+                        <img src="https://luckybansko.com/wp-content/uploads/2018/10/pirin-park.jpg"
+                             alt="pirin mountain park">
+                        <p>Pirin Park</p>
+                    </li>
+                    <li class="item">
+                        <img src="https://www.historyhit.com/app/uploads/2021/07/Tsarevets-Castle_shutterstock.jpg"
+                             alt="tsarevets">
+                        <p>Tsarevets</p>
+                    </li>
+                    <li class="item">
+                        <img src="https://previews.agefotostock.com/previewimage/medibigoff/0cd1f306a5e51fafc5c7112f27121cd2/y6d-2430523.jpg"
+                             alt="waterfall">
+                        <p>Bov Waterfall</p>
+                    </li>
+                    <li class="item">
+                        <img src="https://www.sunnybeach.com/files/what_to_visit_objects/391/16097875413474.jpg"
+                             alt="nos emine">
+                        <p>Emine</p>
+                    </li>
+                </ul>
+            </article>
+        </div>
+        <article class="about__info">
+            <p>Live your dreams now.</p>
+            <p>We have many tourist attractions that you can visit.</p>
+            <ul class="about__items" role="list">
+                <li class="about__item">
+                    <i class="fa-solid fa-camera-retro"></i>
+                </li>
+                <li class="about__item">
+                    <i class="fa-solid fa-utensils"></i>
+                </li>
+                <li class="about__item">
+                    <i class="fa-solid fa-bed"></i>
+                </li>
+            </ul>
+            <p>If you have any questions fill the form below.</p>
+        </article>
+        <article class="about__contact">
+            <div class="contact__image-wrapper">
+                <img src="https://images.everydayhealth.com/images/arthritis/rheumatoid-arthritis/cs-top-gadgets-that-make-travelling-with-rheumatoid-arthritis-easier-722x406.jpg"
+                     alt="person">
+                <div class="contact-shadow"></div>
+            </div>
+            <div class="form-wrapper">
+                <h2 class="contact_heading">CONTACT US</h2>
+                <p class="contact_desc">Let leave your travel plan to travel experts!</p>
+                <form action="" class="about__form">
+                    <input type="text" placeholder="First Name" class="layout1">
+                    <input type="text" placeholder="Last Name" class="layout2">
+                    <input type="number" placeholder="Phone Number" class="layout3">
+                    <input type="email" placeholder="Email Address" class="layout4">
+                    {#                    <input type="text" placeholder="Your Message" id="formTextBox" class="layout5">#}
+                    <textarea name="" id="" cols="5" rows="5" class="layout5" placeholder="Your Message"></textarea>
+                    <button class="layout6">SEND NOW</button>
+                </form>
+            </div>
+        </article>
+        {#        <img src="https://images.unsplash.com/photo-1621761879074-01102476f358?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2748&q=80"#}
+        {#                alt="no img"> #}
+    </section>
+
+    <section id="reservationView">
+        <h1>Reservation</h1>
+    </section>
+</div>
+<script src="{% static 'src/app.js' %}" type="module"></script>
+</body>
+</html>
