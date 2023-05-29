@@ -151,12 +151,6 @@ class ReservationCreateView(rest_views.GenericAPIView):
         serializer = self.serializer_class(data=data)
         if serializer.is_valid():
             serializer.save()
-            # TODO: 1 DA SMENQ ALERTITE POVECHETO S NQKAKUV VID NOTIFIKACII,!! ,, 2 da pregledam js koda da iztriq kakvoto e nujno!!!
-            # TODO:V SETTINGS DA OPRAVQ ZAKOMENTIRANOTO
-            # TODO: ako reservaciqta e s free cancelation da moga da q triq ot strancicata s moite reservacii!!!
-            # TODO: ako e do 1 chas sled napravata da moje da se updeitne datata ot stranicata reservations!!!
-            # TODO: DA NAPRAVQ USER KUM REZERVACIQ ZA DA MY GI POKAZVA V RESERVATIONS!!!
-            # TODO NQKAK KATO MINE DATATA DA SE MAHA REZERVACIQTA AKO MOJE ???
             response = {'message': 'Reservated successfully.'}
 
             return Response(data=response, status=status.HTTP_201_CREATED)
