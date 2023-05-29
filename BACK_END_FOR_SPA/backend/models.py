@@ -214,3 +214,4 @@ class HotelFacilities(models.Model):
 
     def __str__(self):
         return f"{self.hotel.name}'s Facilities"
+class RoomReservation

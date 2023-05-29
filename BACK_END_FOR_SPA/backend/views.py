@@ -23,7 +23,6 @@ class IndexView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         response = render(request, self.template_name)
-        # TODO: TO UNDERSTAND SERIALIZERS DONCHO VIDEOTO PSLEDNIQ 1 CHAS
         if request.user.is_superuser:
             admin_token = Token.objects.filter(user_id=request.user.id).get()
             response.set_cookie('ADMIN-TOKEN', admin_token)
