@@ -1,9 +1,13 @@
+import json
+from urllib.parse import unquote
+from django.core.mail import send_mail
 from django.shortcuts import render
+from django.views import View
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from django.views.generic import TemplateView
 from rest_framework import generics as rest_views, status
-from rest_framework.mixins import ListModelMixin
+
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -14,7 +18,8 @@ from django.contrib.auth import authenticate
 from BACK_END_FOR_SPA.backend.mixins import CheckRoomsAvailability, check_room_availability, get_free_room
 from BACK_END_FOR_SPA.backend.models import Hotel, MyUser, Room, RoomReservatedDates
 from BACK_END_FOR_SPA.backend.serializers import SignUpSerializer, ShortHotelSerializer, ShortRoomSerializer, \
-    HotelSerializer, RoomSerializer, ReservationsCreateSerializer
+    HotelSerializer, RoomSerializer, ReservationsCreateSerializer, UserReservationSerializer, \
+    ShortUserReservationSerializer
 
 
 # Create your views here.
@@ -37,7 +42,6 @@ class ListItemsView(rest_views.ListAPIView):
 
 class SignUpView(rest_views.GenericAPIView):
     serializer_class = SignUpSerializer
-    # permission_classes = [AllowAny]
     permission_classes = []
 
     def post(self, request: Request):
@@ -98,7 +102,8 @@ class HotelListApiView(rest_views.ListCreateAPIView, CheckRoomsAvailability):
             return hotels
         else:
             if destination is not None:
-                hotels = self.queryset.filter(city=destination)
+                # hotels = self.queryset.filter(city=destination)
+                hotels = self.queryset.filter(city__icontains=destination)
             room_type = room_type
 
             hotels = hotels.filter(room__room_type=room_type)
@@ -146,11 +151,66 @@ class ReservationCreateView(rest_views.GenericAPIView):
     serializer_class = ReservationsCreateSerializer
 
     def post(self, request: Request):
+        user_auth_token = request.headers['Authorization'].split(' ')[1]
+        user_id = Token.objects.get(key=user_auth_token).user_id
         data = request.data
+        data['user'] = user_id
         serializer = self.serializer_class(data=data)
+
         if serializer.is_valid():
             serializer.save()
-            response = {'message': 'Reservated successfully.'}
 
+            response = {'message': 'Reservated successfully.'}
             return Response(data=response, status=status.HTTP_201_CREATED)
+
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ReservationListApiView(rest_views.ListAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = RoomReservatedDates.objects.all()
+    serializer_class = UserReservationSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user_auth_token = self.request.headers['Authorization'].split(' ')[1]
+        user_id = Token.objects.get(key=user_auth_token).user_id
+        queryset = queryset.filter(user=user_id)
+        return queryset
+
+
+class ReservationDeleteApiView(rest_views.DestroyAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = ShortUserReservationSerializer
+    queryset = RoomReservatedDates.objects.all()
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response("Successfully deleted reservation", status=status.HTTP_200_OK)
+
+
+class EmailView(View):
+    def post(self, request):
+        data = request.body
+        data = str(data, encoding='utf-8')
+        data = unquote(data)
+        data = json.loads(data)
+
+        user_email = data['userEmail']
+        user_message = f'Hello my name is {data["firstName"]} {data["lastName"]}\nPhone number: {data["phoneNumber"]}\n Email:{user_email}\n{data["userMessage"]}'
+
+        email_subject = 'Question About the Trip.'
+        self.send_email(email_subject, user_message, user_email)
+        return HttpResponse(status=204)
+
+    def send_email(self, email_subject, email_message, user_email):
+        subject = email_subject
+        email_from = user_email
+        recipient_list = ['pythonproject777@abv.bg', ]
+        message = email_message
+        send_mail(subject, message, email_from, recipient_list)
+
+

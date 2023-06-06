@@ -128,6 +128,10 @@ class RoomReservatedDates(models.Model):
         Room,
         on_delete=models.CASCADE,
     )
+    user = models.ForeignKey(
+        MyUser,
+        on_delete=models.CASCADE,
+    )
 
     def __str__(self):
         return f"{self.room.hotel} N{self.room.number}: {self.check_in_data} / {self.check_out_data}"
@@ -214,4 +218,3 @@ class HotelFacilities(models.Model):
 
     def __str__(self):
         return f"{self.hotel.name}'s Facilities"
-class RoomReservation

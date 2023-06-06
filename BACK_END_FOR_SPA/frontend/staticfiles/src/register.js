@@ -1,6 +1,5 @@
 import {loginView} from "./login.js";
-import {homeView} from "./home.js";
-import {normalizeInputFields, changeInputFields} from "./importFunc.js";
+import {normalizeInputFields, changeInputFields, getDomainName} from "./utils.js";
 import {navActiveClassControl} from "./nav-controls.js";
 
 let section = document.getElementById('registerView');
@@ -8,7 +7,6 @@ let navElement = document.getElementById('registerBtn');
 
 document.querySelector('#registerView .login__form').addEventListener('click', changeInputFields);
 let otherInputFields = document.querySelectorAll('#registerView .login__form input');
-// TODO: REGISTER I LOGIN HANDLER KATO SE REGNESH DA TE PRASHTA V LOGIN I OT LOGIN V HOME
 section.remove();
 let form = section.querySelector('form');
 
@@ -32,7 +30,8 @@ async function registerHandler(event) {
     let password = formInputs.get('password');
     let rePassword = formInputs.get('repass');
 
-    let url = 'http://127.0.0.1:8000/api/signup/';
+    let domainName = getDomainName();
+    let url = `${domainName}/api/signup/`;
     try {
         if (email === '' || password === '') {
             throw new Error('All fields are required!');

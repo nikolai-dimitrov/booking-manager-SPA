@@ -1,5 +1,5 @@
 import {roomView} from './rooms.js';
-import {changeFacilityNames, checkDates} from "./importFunc.js";
+import {changeFacilityNames, checkDates} from "./utils.js";
 
 let cancellationMapper = {
     'true': {
@@ -22,13 +22,16 @@ let prepaymentMapper = {
     }
 }
 
-export function createHotelCard(hotelData, homeView, searched_room, daysToRest,specifyingDates) {
+export function createHotelCard(hotelData, currentSection, searchedRoom, daysToRest, specifyingDates, roomPrice, dates, reservationId) {
     let rating = ratingMapper(hotelData.rating);
-    let roomPrice = getRoomPrice(hotelData.room_set, searched_room, daysToRest);
+    if (roomPrice === null) {
+        roomPrice = getRoomPrice(hotelData.room_set, searchedRoom, daysToRest);
+    }
+
     let cancellation = cancellationMapper[hotelData.free_cancellation];
     let prepayment = prepaymentMapper[hotelData.prepayment];
 
-    let articleElement = customCreateElements('article', null, homeView, ['home__card'], hotelData.name);
+    let articleElement = customCreateElements('article', null, currentSection, ['home__card'], hotelData.name);
     let divHotelInfo = customCreateElements('div', null, articleElement, ['hotel-info-wrapper']);
     let divImgWrapperElement = customCreateElements('div', null, divHotelInfo, ['card__img-wrapper']);
     let imgElement = customCreateElements('img', null, divImgWrapperElement, ['card__img-wrapper'], null, {'src': hotelData.image});
@@ -55,17 +58,26 @@ export function createHotelCard(hotelData, homeView, searched_room, daysToRest,s
     let divCardDescWrapperElement = customCreateElements('div', null, divCardBodyElement, ['card__desc-wrapper']);
     // Description Left
     let divCardDescLeftElement = customCreateElements('div', null, divCardDescWrapperElement, ['card__desc-left']);
-    let pCardDescRoomElement = customCreateElements('p', `Standard ${searched_room}`, divCardDescLeftElement, ['room']);
+    let pCardDescRoomElement = customCreateElements('p', `Standard ${searchedRoom}`, divCardDescLeftElement, ['room']);
     let pCardDescEatingElement = customCreateElements('p', 'Breakfast included', divCardDescLeftElement, ['eating']);
     let pCardDescCancellationElement = customCreateElements('p', `${cancellation.text}`, divCardDescLeftElement, ['cancellation', `${cancellation.className}`]);
     let pCardDescPrepaymentElement = customCreateElements('p', `${prepayment.text}`, divCardDescLeftElement, ['prepayment', `${prepayment.className}`]);
+    if (currentSection.id === 'reservationView') {
+        let divDatesContainer = customCreateElements('div', null, divCardDescLeftElement, ['flex-gap-5',], `${reservationId}`);
+        let spanCardDescCheckInTextElement = customCreateElements('span', 'In:', divDatesContainer)
+        let pCardDescCheckInDateElement = customCreateElements('p', `${dates[0]}`, divDatesContainer, ['black-bolded',]);
+        let spanCardDescCheckOutTextElement = customCreateElements('span', 'Out:', divDatesContainer)
+        let pCardDescCheckOutDateElement = customCreateElements('p', `${dates[1]}`, divDatesContainer, ['black-bolded',]);
+        articleElement.style.backgroundColor = 'whitesmoke'
+    }
     // Description Right
     let divCardDescRightElement = customCreateElements('div', null, divCardDescWrapperElement, ['card__desc-right']);
     let pCardDescNightsElement = customCreateElements('p', `${daysToRest} night`, divCardDescRightElement, ['card__night']);
-    let pCardDescRoomTypeElement = customCreateElements('p', `${searched_room}`, divCardDescRightElement, ['card__room-type']);
+    let pCardDescRoomTypeElement = customCreateElements('p', `${searchedRoom}`, divCardDescRightElement, ['card__room-type']);
     let pCardDescPriceElement = customCreateElements('p', `BGN ${roomPrice}`, divCardDescRightElement, ['card__price']);
     let pCardDescPriceDescElement = customCreateElements('p', 'Includes taxes', divCardDescRightElement, ['card__price-desc']);
     let anchorCard = customCreateElements('a', 'More Information', divCardDescRightElement, ['card__btn'], null, {'href': '#/'});
+
     anchorCard.addEventListener('click', roomView);
 
     let divRoomInfo = customCreateElements('div', null, articleElement, ['hide-element', 'room__info-wrapper'])
@@ -109,6 +121,7 @@ function ratingMapper(rating) {
 }
 
 export function createRoomCard(roomData, cardEl) {
+    let sectionId = cardEl.parentElement.id
     let roomInfoWrapper = cardEl.querySelector('div.room__info-wrapper');
     roomInfoWrapper.innerHTML = '';
     let checkInDate = document.querySelector('#homeView .hotels__form input[name="checkInDate"]');
@@ -123,7 +136,7 @@ export function createRoomCard(roomData, cardEl) {
     let ulFacilityItemsElement = customCreateElements('ul', null, roomInfoWrapper, ['room__facilities'], null, {'role': 'list'});
     fillRoomUlElements(roomData, ulFacilityItemsElement, true);
     let divDividerSecond = customCreateElements('div', null, roomInfoWrapper, ['divider']);
-    // Remove divider if room's facilities = 0
+
     if (roomData.roomfacilities_set[0] === undefined) {
         divDividerSecond.style.display = 'none';
     }
@@ -132,31 +145,58 @@ export function createRoomCard(roomData, cardEl) {
     let divInfoWrapperElement = customCreateElements('div', null, divFinishReservationElement, ['info-wrapper']);
     let divAnchorWrapperElement = customCreateElements('div', null, divFinishReservationElement, ['button-wrapper']);
     let anchorReserveElement = customCreateElements('a', 'Reserve', divAnchorWrapperElement, ['reservation__btn',], null);
+    if (sectionId === 'homeView') {
+        if (sessionStorage.getItem('checkIn') !== "") {
+            anchorReserveElement.classList.add('green');
+            let cBody = cardEl.querySelector('.card__body')
+            anchorReserveElement.id = cBody.id;
+        } else {
+            divInfoWrapperElement.classList.add('no-date-flex')
+            let pReservationTextElement = customCreateElements('p', "Please enter check in\\check out date for your stay.", divInfoWrapperElement, ['bolded-el']);
+            let labelCheckInElement = customCreateElements('label', 'Check In:', divInfoWrapperElement, null, null, {'for': 'checkInR'});
+            let inputCheckInElement = customCreateElements('input', null, labelCheckInElement, ['reservation__inputs'], null, {
+                'type': 'date',
+                'name': 'checkInR'
+            });
+            let labelCheckOutElement = customCreateElements('label', 'Check Out:', divInfoWrapperElement, null, null, {'for': 'checkOutR'});
+            let inputCheckOutElement = customCreateElements('input', null, labelCheckOutElement, ['reservation__inputs'], null, {
+                'type': 'date',
+                'name': 'checkOutR'
+            });
+            anchorReserveElement.classList.add('gray');
+            anchorReserveElement.classList.add('disableClick');
+            anchorReserveElement.textContent = 'Check Dates';
+            divFinishReservationElement.classList.add('no-date-flex-end');
 
-    if (sessionStorage.getItem('checkIn') !== "") {
-        anchorReserveElement.classList.add('green');
-        let cBody = cardEl.querySelector('.card__body')
-        anchorReserveElement.id = cBody.id;
+            inputCheckInElement.addEventListener('input', checkDates);
+            inputCheckOutElement.addEventListener('input', checkDates);
+        }
     } else {
-        divInfoWrapperElement.classList.add('no-date-flex')
-        let pReservationTextElement = customCreateElements('p', "Please enter check in\\check out date for your stay.", divInfoWrapperElement, ['bolded-el']);
-        let labelCheckInElement = customCreateElements('label', 'Check In:', divInfoWrapperElement, null, null, {'for': 'checkInR'});
-        let inputCheckInElement = customCreateElements('input', null, labelCheckInElement, ['reservation__inputs'], null, {
-            'type': 'date',
-            'name': 'checkInR'
-        });
-        let labelCheckOutElement = customCreateElements('label', 'Check Out:', divInfoWrapperElement, null, null, {'for': 'checkOutR'});
-        let inputCheckOutElement = customCreateElements('input', null, labelCheckOutElement, ['reservation__inputs'], null, {
-            'type': 'date',
-            'name': 'checkOutR'
-        });
-        anchorReserveElement.classList.add('gray');
-        anchorReserveElement.classList.add('disableClick');
-        anchorReserveElement.textContent = 'Check Dates';
-        divFinishReservationElement.classList.add('no-date-flex-end');
+        let divPopupContainerElement = customCreateElements('div', null, divFinishReservationElement, ['reservation__popup',])
+        let pPopupTextElement = customCreateElements('p', 'Are you sure you want to delete?', divPopupContainerElement);
 
-        inputCheckInElement.addEventListener('input', checkDates);
-        inputCheckOutElement.addEventListener('input', checkDates);
+        let anchorPopupElementY = customCreateElements('a', 'YES', divPopupContainerElement, ['delete-button-popup-y',]);
+        anchorPopupElementY.setAttribute('href', '#')
+        let anchorPopupElementN = customCreateElements('a', 'NO', divPopupContainerElement, ['delete-button-popup-n',]);
+        anchorPopupElementN.setAttribute('href', '#')
+
+        let pReservationTextElement = customCreateElements('p', "If free cancellation is available you can cancel your reservation here:", divInfoWrapperElement, ['bolded-el']);
+        divFinishReservationElement.style.justifyContent = 'space-between';
+        divFinishReservationElement.style.alignItems = 'center';
+        let cancellationEl = cardEl.querySelector('.cancellation');
+        let cancellationText = cancellationEl.textContent;
+        anchorReserveElement.textContent = 'Cancel';
+        if (cancellationText === 'FREE Cancellation') {
+            anchorReserveElement.style.backgroundColor = 'red';
+            anchorReserveElement.classList.remove('disableClick')
+            let reservationId = cardEl.querySelector('.flex-gap-5')
+            anchorReserveElement.id = reservationId.id
+            reservationId.removeAttribute('id');
+        } else {
+            anchorReserveElement.style.backgroundColor = 'gray';
+            anchorReserveElement.classList.add('disableClick')
+        }
+
     }
 }
 

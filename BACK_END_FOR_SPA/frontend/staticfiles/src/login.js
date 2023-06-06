@@ -1,6 +1,6 @@
 import {homeView} from "./home.js";
 import {registerView} from "./register.js";
-import {normalizeInputFields, changeInputFields, rememberMe} from "./importFunc.js";
+import {normalizeInputFields, changeInputFields, rememberMe, lsRememberMe, getDomainName} from "./utils.js";
 import {navActiveClassControl} from "./nav-controls.js";
 
 document.querySelector('.login__form button').addEventListener('click', lsRememberMe);
@@ -9,21 +9,6 @@ document.querySelector('#loginView .login__form').addEventListener('click', chan
 
 let otherInputFields = Array.from(document.querySelectorAll('#loginView .login__form input')).filter((input) => input.type !== 'checkbox');
 
-// function rememberMe() {
-//     const rmCheck = document.getElementById("rememberMe"),
-//         username = document.querySelector('#loginView .login__form input[name="username"]');
-//     let pass = document.querySelector('#loginView .login__form input[name="password"]');
-//
-//     if (localStorage.checkbox && localStorage.checkbox !== "") {
-//         rmCheck.setAttribute("checked", "checked");
-//         username.value = localStorage.username;
-//     } else {
-//         rmCheck.removeAttribute("checked");
-//         username.value = "";
-//         pass.value = "";
-//     }
-// }
-// rememberMe();
 
 let navElement = document.getElementById('loginBtn');
 let section = document.getElementById('loginView');
@@ -52,7 +37,8 @@ export async function loginHandler(event) {
     let username = formInputs.get('username');
     let password = formInputs.get('password');
 
-    let url = 'http://127.0.0.1:8000/api/login/';
+    let domainName = getDomainName();
+    let url = `${domainName}/api/login/`;
     try {
         let response = await fetch(url, {
             method: 'post',
@@ -83,17 +69,4 @@ export async function loginHandler(event) {
 function redirectRegister(event) {
     event.preventDefault();
     registerView();
-}
-
-
-function lsRememberMe() {
-    let rmCheck = document.getElementById("rememberMe");
-    let username = document.querySelector('#loginView .login__form input[name="username"]');
-    if (rmCheck.checked && username.value !== "") {
-        localStorage.username = username.value;
-        localStorage.checkbox = rmCheck.value;
-    } else {
-        localStorage.username = "";
-        localStorage.checkbox = "";
-    }
 }

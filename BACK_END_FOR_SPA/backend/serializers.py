@@ -43,18 +43,18 @@ class SignUpSerializer(serializers.ModelSerializer):
 class ReservationsCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomReservatedDates
-        fields = ['check_in_data', 'check_out_data', 'room']
+        fields = ['check_in_data', 'check_out_data', 'room', 'user']
 
     def validate(self, attrs):
         check_in = attrs['check_in_data']
         check_out = attrs['check_out_data']
         room = attrs['room']
-        reservations = room.roomreservateddates_set.all().filter(check_in_data=check_in,check_out_data=check_out)
+        user = attrs['user']
+        reservations = room.roomreservateddates_set.all().filter(check_in_data=check_in, check_out_data=check_out)
         if reservations:
             raise ValidationError('Already have reservation in this room!')
         else:
             return super().validate(attrs)
-
 
 
 class ShortRoomSerializer(serializers.ModelSerializer):
@@ -89,4 +89,26 @@ class RoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
+        fields = '__all__'
+
+
+class RoomAndHotelSerializer(serializers.ModelSerializer):
+    hotel = ShortHotelSerializer()
+
+    class Meta:
+        model = Room
+        fields = '__all__'
+
+
+class UserReservationSerializer(serializers.ModelSerializer):
+    room = RoomAndHotelSerializer()
+
+    class Meta:
+        model = RoomReservatedDates
+        fields = '__all__'
+
+
+class ShortUserReservationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RoomReservatedDates
         fields = '__all__'

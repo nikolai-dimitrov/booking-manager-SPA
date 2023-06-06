@@ -35,18 +35,20 @@ export function cleanFields(inputField, notRemovableField) {
     }
 }
 
-export function getCookie(cname) {
-    let name = cname + '=';
-    let splittedCookies = document.cookie.split(';')
-    console.log(splittedCookies)
-    for (let i = 0; i < splittedCookies.length; i++) {
-        let c = splittedCookies[i].split('=');
-        let name = c[0].trim();
-        let value = c[1].trim();
-        if (name === 'ADMIN-TOKEN') {
-            return value;
+export function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
         }
     }
+    return cookieValue;
 }
 
 export function rememberMe() {
@@ -64,6 +66,18 @@ export function rememberMe() {
     }
 }
 
+export function lsRememberMe() {
+    let rmCheck = document.getElementById("rememberMe");
+    let username = document.querySelector('#loginView .login__form input[name="username"]');
+    if (rmCheck.checked && username.value !== "") {
+        localStorage.username = username.value;
+        localStorage.checkbox = rmCheck.value;
+    } else {
+        localStorage.username = "";
+        localStorage.checkbox = "";
+    }
+}
+
 export function getRestDaysAsNumber(checkIn, checkOut) {
     if (checkIn !== '' && checkOut !== '') {
         let checkInDate = new Date(checkIn);
@@ -77,8 +91,9 @@ export function getRestDaysAsNumber(checkIn, checkOut) {
 
 }
 
-export function clearHomePage() {
-    document.querySelectorAll('#homeView article.home__card').forEach((el) => el.remove());
+export function clearPage(section) {
+    section.querySelectorAll('article.home__card').forEach((el) => el.remove());
+    console.log(section)
 }
 
 export function setDatesSessionStorage(checkIn, checkOut) {
@@ -116,14 +131,17 @@ export function checkDates(event) {
             let pElement = parentContainer.querySelector('p');
             let checkInField = parentContainer.querySelector('.info-wrapper input[name="checkInR"]');
             let checkOutField = parentContainer.querySelector('.info-wrapper input[name="checkOutR"]');
+            let today = new Date()
             let checkInDate = new Date(checkInField.value);
             let checkOutDate = new Date(checkOutField.value);
-            if (checkInDate >= checkOutDate) {
+            if (checkInDate < today || checkOutDate <= today) {
+                pElement.textContent = 'Please enter valid date for your stay.'
+                disableReservationBtn(btn)
+                return
+            } else if (checkInDate >= checkOutDate) {
                 pElement.textContent = 'Check in date must be before check out date!'
                 btn.textContent = 'Check Dates';
-                btn.classList.add('disableClick');
-                btn.classList.add('gray');
-                btn.classList.remove('orange');
+                disableReservationBtn(btn);
                 return
             } else {
                 pElement.textContent = 'Please enter check in\\check out date for your stay.'
@@ -135,4 +153,16 @@ export function checkDates(event) {
             }
         }
     }
+}
+
+function disableReservationBtn(btn) {
+    btn.classList.add('disableClick');
+    btn.classList.add('gray');
+    btn.classList.remove('orange');
+}
+
+export function getDomainName() {
+    // return 'https://bookingmanager.westeurope.cloudapp.azure.com';
+    return 'http://127.0.0.1:8000';
+    // return 'http://localhost:81';
 }

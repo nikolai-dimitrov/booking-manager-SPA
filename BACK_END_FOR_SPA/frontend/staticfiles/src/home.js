@@ -1,5 +1,5 @@
 import {changeNavForGuests, navActiveClassControl} from './nav-controls.js';
-import {getCookie, getRestDaysAsNumber, clearHomePage, setDatesSessionStorage} from './importFunc.js';
+import {getCookie, getRestDaysAsNumber, clearPage, setDatesSessionStorage, getDomainName} from './utils.js';
 import {createHotelCard} from './create-html-elements.js';
 
 let section = document.getElementById('homeView');
@@ -12,20 +12,29 @@ async function searchHotels(event) {
     let roomType = document.querySelector('#homeView .hotels__form select');
 
     let specifyingDates = false;
+    let domainName = getDomainName();
     let url = '';
     if (event) {
         if (event.target.tagName === 'BUTTON') {
             event.preventDefault();
             let checkInAsNumber = new Date(checkIn.value);
             let checkOutAsNumber = new Date(checkOut.value);
+            let today = new Date();
+
+            today.setHours(0, 0, 0, 0);
+            checkInAsNumber.setHours(0, 0, 0, 0);
+            checkOutAsNumber.setHours(0, 0, 0, 0);
             if (checkIn.value === "" && checkOut.value !== "") {
-                alert('Please enter check in date');
+                alert('Please enter check in date.');
                 return
             } else if (checkIn.value !== "" && checkOut.value === "") {
-                alert('Please enter check out date');
+                alert('Please enter check out date.');
                 return
             } else if (checkInAsNumber >= checkOutAsNumber) {
-                alert('Check in date must be before check out date')
+                alert('Check in date must be before check out date.');
+                return
+            } else if ((checkInAsNumber < today) || (checkOutAsNumber <= today)) {
+                alert('Please enter valid dates for your stay.');
                 return
             }
             let filtersArr = [city, checkIn, checkOut, roomType];
@@ -36,10 +45,10 @@ async function searchHotels(event) {
                 }
             }
             specifyingDates = true;
-            url = `http://127.0.0.1:8000/api/hotels/?${urlExtension}`;
+            url = `${domainName}/api/hotels/?${urlExtension}`;
         }
     } else {
-        url = 'http://127.0.0.1:8000/api/hotels';
+        url = `${domainName}/api/hotels`;
         city.textContent = '';
         checkIn.value = '';
         checkOut.value = '';
@@ -55,9 +64,8 @@ async function searchHotels(event) {
         }
         let responseData = await response.json();
         let daysToRest = getRestDaysAsNumber(checkIn.value, checkOut.value);
-        clearHomePage();
+        clearPage(section);
         displayHotels(responseData, roomType.value, daysToRest, specifyingDates);
-        console.log(responseData);
         setDatesSessionStorage(checkIn.value, checkOut.value);
     } catch (error) {
         alert(error.message);
@@ -66,12 +74,11 @@ async function searchHotels(event) {
 
 
 export function homeView(event) {
-    let element = document.querySelector('#homeBtn')
+    let element = document.querySelector('#homeBtn');
     changeNavForGuests();
-    navActiveClassControl(element)
+    navActiveClassControl(element);
     document.querySelector('main').replaceChildren(section);
 
-    // loadHotels(event);
     searchHotels(event);
     setDatesSessionStorage('', '');
 
@@ -85,8 +92,8 @@ export function homeView(event) {
 }
 
 
-function displayHotels(hotelsList, searched_room, daysToRest, specifyingDates) {
+export function displayHotels(hotelsList, searched_room, daysToRest, specifyingDates) {
     for (const hotelData of hotelsList) {
-        createHotelCard(hotelData, section, searched_room, daysToRest, specifyingDates);
+        createHotelCard(hotelData, section, searched_room, daysToRest, specifyingDates, null);
     }
 }

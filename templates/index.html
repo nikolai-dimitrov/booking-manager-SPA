@@ -82,111 +82,10 @@
         </form>
         <h2 class="home__heading">Let's go on an adventure</h2>
         <p class="home__desc">Find and book a great experience.</p>
-        <article class="home__card">
-            <div class="hotel-info-wrapper">
-                <div class="card__img-wrapper">
-                    <img src="https://m.economictimes.com/thumb/msid-69148597,width-1200,height-900,resizemode-4,imgsize-235513/hotel-agencies.jpg"
-                         alt="no-img">
-                </div>
-                <div class="card__body">
-                    <div class="card__heading-wrapper">
-                        <div class="heading__left-side">
-                            <div class="heading__left-upper">
-                                <h3 class="card__heading">EXAMPLE CARD</h3>
-                                <span class="card__stars">
-                                <i class="fa-solid fa-star"></i>
-                            </span>
-                            </div>
-                            <div class="heading__left-lower">
-                                <p class="card__city">Varna,</p>
-                                <p class="card__country">Bulgaria</p>
-                                <p class="card__distance-info">1.8km from centre</p>
-                            </div>
-                        </div>
-                        <div class="heading__right-side">
-                            <p class="card__rating-text">Super</p>
-                            <p class="card__rating-num">9.3</p>
-                        </div>
-                    </div>
-                    <div class="card__desc-wrapper">
-                        <div class="card__desc-left">
-                            <p class="room">Standard Single Room</p>
-                            <p class="eating">Breakfast included</p>
-                            <p class="cancellation">Free Cancellation</p>
-                            <p class="prepayment">No prepayment needed</p>
-                        </div>
-                        <div class="card__desc-right">
-                            <p class="card__night">1 night</p>
-                            <p class="card__room-type">Single Room</p>
-                            <p class="card__price">BGN 100</p>
-                            <p class="card__price-desc">Includes taxes</p>
-                            <a href="#" class="card__btn">More information</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="room__info-wrapper">
-                <h3>Our room features:</h3>
-                <ul class="room__items" role="list">
-                    <li class="item">
-                        <p><i class="fa-solid fa-door-open"></i>40m2</p>
-                    </li>
-                    <li class="item">
-                        <p><i class="fa-solid fa-mountain-sun"></i>Mountain</p>
-                    </li>
-                    <li class="item">
-                        <p><i class="fa-solid fa-umbrella-beach"></i>Balcony</p>
-                    </li>
-                    <li class="item">
-                        <p><i class="fa-solid fa-shower"></i>Private bath</p>
-                    </li>
-                    <li class="item">
-                        <p><i class="fa-solid fa-snowflake"></i>Air conditioning</p>
-                    </li>
-                    <li class="item">
-                        <p><i class="fa-solid fa-tv"></i>TV</p>
-                    </li>
-                </ul>
-                <div class="divider"></div>
-                <ul class="room__facilities" role="list">
-                    <li class="item">
-                        <p><i class="fa-solid fa-check green-cl"></i>Mini Bar</p>
-                    </li>
-                    <li class="item">
-                        <p><i class="fa-solid fa-check green-cl"></i>Hair Dryer</p>
-                    </li>
-                    <li class="item">
-                        <p><i class="fa-solid fa-check green-cl"></i>Heating</p>
-                    </li>
-                    <li class="item">
-                        <p><i class="fa-solid fa-check green-cl"></i>Mosquito net</p>
-                    </li>
-                </ul>
-                <div class="divider"></div>
-                <div class="continue__reserve-wrapper no-date-flex-end">
-                    {# IF DATE IS ENTERED AND ROOM AVAILABLE #}
-                    <div class="info-wrapper no-date-flex">
-                        <p>Please enter check in\check out date for your stay.</p>
-                        <label for="checkInR">
-                            Check in:
-                            <input type="date" name="checkInR">
-                        </label>
-                        <label for="checkOutR">
-                            Check out:
-                            <input type="date" name="checkOutR">
-                        </label>
-                    </div>
-                    <div class="button-wrapper">
-                        <a href="#/" class="reservation__btn gray">Reserve</a>
-                    </div>
-                </div>
-            </div>
-        </article>
     </section>
     <section id="loginView">
         <div class="front-shadow"></div>
         <div class="login__img-wrapper">
-            {#            <img src="https://www.fodors.com/assets/destinations/711600/cityscape-amasra-black-sea-coast-turkey_980x650.jpg" alt="">#}
             <img src="https://images.unsplash.com/photo-1500835556837-99ac94a94552?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8dHJhdmVsfGVufDB8fDB8fA%3D%3D&w=1000&q=80"
                  alt="no-img">
         </div>
@@ -213,7 +112,6 @@
     </section>
 
     <section id="registerView">
-        {#            <img src="https://www.fodors.com/assets/destinations/711600/cityscape-amasra-black-sea-coast-turkey_980x650.jpg" alt="">#}
         <div class="front-shadow"></div>
         <div class="login__img-wrapper">
             <img src="https://images.unsplash.com/photo-1500835556837-99ac94a94552?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8dHJhdmVsfGVufDB8fDB8fA%3D%3D&w=1000&q=80"
@@ -327,26 +225,31 @@
                      alt="person">
                 <div class="contact-shadow"></div>
             </div>
+            <div class="successfully_message">
+                <p>Email was sent successfully.</p>
+            </div>
             <div class="form-wrapper">
                 <h2 class="contact_heading">CONTACT US</h2>
                 <p class="contact_desc">Let leave your travel plan to travel experts!</p>
                 <form action="" class="about__form">
+                    {% csrf_token %}
                     <input type="text" placeholder="First Name" class="layout1">
                     <input type="text" placeholder="Last Name" class="layout2">
                     <input type="number" placeholder="Phone Number" class="layout3">
                     <input type="email" placeholder="Email Address" class="layout4">
-                    {#                    <input type="text" placeholder="Your Message" id="formTextBox" class="layout5">#}
                     <textarea name="" id="" cols="5" rows="5" class="layout5" placeholder="Your Message"></textarea>
                     <button class="layout6">SEND NOW</button>
                 </form>
             </div>
         </article>
-        {#        <img src="https://images.unsplash.com/photo-1621761879074-01102476f358?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2748&q=80"#}
-        {#                alt="no img"> #}
     </section>
 
     <section id="reservationView">
-        <h1>Reservation</h1>
+        <h1 class="reservations__heading">Check your reservations here!</h1>
+        <div class="del__confirmation">
+            <p class="del__text">Reservation removed successfully!</p>
+            <a href="#"><i class="fa-solid fa-x"></i></a>
+        </div>
     </section>
 </div>
 <script src="{% static 'src/app.js' %}" type="module"></script>

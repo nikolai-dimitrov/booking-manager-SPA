@@ -4,13 +4,13 @@ import {registerView} from './register.js';
 import {changeNavForGuests, navActiveClassControl} from './nav-controls.js';
 import {aboutView} from './about.js';
 import {reservationView} from './reservation.js';
-import {getCookie} from './importFunc.js'
+import {getDomainName} from './utils.js'
 
 document.getElementById('nav').addEventListener('click', navHandler);
 
 async function logoutHandler() {
-    let url = 'http://127.0.0.1:8000/admin/logout';
-    let isAdmin = getCookie('ADMIN-AUTHENTICATED');
+    let domainName = getDomainName();
+    let url = `${domainName}/admin/logout`;
     if (sessionStorage.getItem('token') === null) {
         alert('You are not logged in!');
     } else {
@@ -18,7 +18,6 @@ async function logoutHandler() {
         let response = await fetch(url);
         sessionStorage.removeItem('token');
         alert('You are logged out!');
-        // changeNavForGuests();
         homeView();
     }
 }

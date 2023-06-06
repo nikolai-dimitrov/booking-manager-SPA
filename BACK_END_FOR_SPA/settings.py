@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+from celery.schedules import crontab
+
+import BACK_END_FOR_SPA.tasks
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,13 +22,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--2%e29!=*ruu)v#4mz4vp^u02_*0*j8bp%ob!$yygz^k%0+hd0'
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS')
+# DEBUG = True
+DEBUG = os.environ.get('DEBUG')
 
+
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(' ')
 # Application definition
 
 INSTALLED_APPS = [
@@ -75,50 +82,37 @@ WSGI_APPLICATION = 'BACK_END_FOR_SPA.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "spa_db",
-        "USER": "postgres",
-        "PASSWORD": "1123QwER",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+        "NAME": os.environ.get('DB_NAME'),
+        "USER": os.environ.get('DB_USER'),
+        "PASSWORD": os.environ.get('DB_PASSWORD'),
+        "HOST": os.environ.get('DB_HOST'),
+        "PORT": os.environ.get('DB_PORT'),
     }
 }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
+
+AUTH_PWD_MODULE = "django.contrib.auth.password_validation."
 AUTH_PASSWORD_VALIDATORS = [
-    # {
-    #     'NAME': 'django.contrib.auth_app.password_validation.UserAttributeSimilarityValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth_app.password_validation.MinimumLengthValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth_app.password_validation.CommonPasswordValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth_app.password_validation.NumericPasswordValidator',
-    # },
+    {
+        "NAME": f"{AUTH_PWD_MODULE}UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": f"{AUTH_PWD_MODULE}MinimumLengthValidator",
+    },
+    {
+        "NAME": f"{AUTH_PWD_MODULE}CommonPasswordValidator",
+    },
+    {
+        "NAME": f"{AUTH_PWD_MODULE}NumericPasswordValidator",
+    },
 ]
-# AUTH_PWD_MODULE="django.contrib.auth.password_validation."
-#
-# AUTH_PASSWORD_VALIDATORS = [
-#     {
-#         "NAME": f"{AUTH_PWD_MODULE}UserAttributeSimilarityValidator",
-#     },
-#     {
-#         "NAME": f"{AUTH_PWD_MODULE}MinimumLengthValidator",
-#     },
-#     {
-#         "NAME": f"{AUTH_PWD_MODULE}CommonPasswordValidator",
-#     },
-#     {
-#         "NAME": f"{AUTH_PWD_MODULE}NumericPasswordValidator",
-#     },
-# ]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -136,6 +130,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'BACK_END_FOR_SPA/frontend/staticfiles']
 
+STATIC_ROOT = '/tmp/back_end_for_spa/staticfiles'
+
 REST_FRAMEWORK = {
     'NON_FIELD_ERRORS_KEY': 'errors',
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -147,11 +143,29 @@ REST_FRAMEWORK = {
     ),
 }
 
-# CORS_ORIGIN_WHITELIST = [
-#     'http://localhost:3000',
-# ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'backend.MyUser'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_FROM = os.environ.get('EMAIL_FROM')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
+
+CELERY_BEAT_SCHEDULE = {
+    "sample_task": {
+        "task": "BACK_END_FOR_SPA.tasks.sample_task",
+        # "schedule": crontab(minute="0",hour=12),
+        "schedule": crontab(0, 0, day_of_month='11',
+                            month_of_year='5'),
+
+    },
+}

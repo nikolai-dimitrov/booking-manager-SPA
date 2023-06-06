@@ -1,4 +1,3 @@
-import {getCookie} from './importFunc.js';
 export function changeNavForGuests(event) {
     let loginBtn = document.getElementById('loginBtn');
     let registerBtn = document.getElementById('registerBtn');
@@ -23,17 +22,3 @@ export function navActiveClassControl(element) {
     otherNavElements.forEach((el) => el.classList.remove('active'));
     element.classList.add('active');
 }
-
-// function getCookie(cname) {
-//     let name = cname + '=';
-//     let splittedCookies = document.cookie.split(';')
-//     console.log(splittedCookies)
-//     for (let i = 0; i < splittedCookies.length; i++) {
-//         let c = splittedCookies[i].split('=');
-//         let name = c[0].trim();
-//         let value = c[1].trim();
-//         if (name === 'ADMIN-AUTHENTICATED') {
-//             return value
-//         }
-//     }
-// }
